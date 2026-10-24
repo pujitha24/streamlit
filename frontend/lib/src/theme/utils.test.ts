@@ -4880,6 +4880,21 @@ describe("Sidebar theme creation", () => {
       )
     })
 
+    it("does not warn about blank color configs inherited from the main theme", () => {
+      const logWarningSpy = vi.spyOn(LOG, "warn")
+      const mainTheme = createTheme(CUSTOM_THEME_NAME, {
+        primaryColor: "red",
+        textColor: "",
+      })
+
+      const sidebarTheme = createSidebarTheme(mainTheme)
+
+      expect(logWarningSpy).not.toHaveBeenCalled()
+      expect(sidebarTheme.emotion.colors.bodyText).toBe(
+        mainTheme.emotion.colors.bodyText
+      )
+    })
+
     it("treats a blank sidebar backgroundColor as unset", () => {
       const mainTheme = createTheme(CUSTOM_THEME_NAME, {
         backgroundColor: "white",

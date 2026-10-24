@@ -810,6 +810,11 @@ export const createEmotionTheme = (
   const parsedColors = Object.entries(customColors).reduce(
     // parseColor drops unset or invalid colors, so a lookup can return undefined.
     (colorsArg: Partial<Record<string, string>>, [key, color]) => {
+      // A blank color is an unset protobuf default, not an invalid value.
+      if (typeof color === "string" && color.trim() === "") {
+        return colorsArg
+      }
+
       // @ts-expect-error - remaining theme values are not all typed as color strings
       const validatedColor = parseColor(color, key, inSidebar)
       if (validatedColor) {
